@@ -1,0 +1,158 @@
+<%- include('header.ejs') %>
+<main class="mw">
+  <h2>THE BLOG</h2>
+  <h3>details page</h3>
+  <div class="detail">
+    <h4><%= posts.title %></h4>
+    <p>
+      <!--likeMember 는 배열형태-->
+      <a href="/personal/<%= posts.userid %>"> WRITER : <%= posts.userid %></a> / 
+      <%
+        const serverPostDate = new Date(posts.createAtDate);
+        const datePostStr = serverPostDate.toISOString().slice(0,10);
+      %> 
+      <%= datePostStr %>
+      / LIKES : <%= like.likeTotal %> 
+      / FROM WHO :
+      <% if(like.likeMember && Array.isArray(like.likeMember)){ %> 
+      <%-
+      like.likeMember.map(m => ` <a href="/personal/${m}">${m}</a>`) %> 
+      <% } %>
+    </p>
+    <div class="img">
+      <% if(posts.postImgPath == null){ %>
+      <img src="/noimg.png" alt="이미지 없음" />
+      <% } else { %>
+      <img src="<%= posts.postImgPath %>" alt="<%= posts.title %>" />
+      <% } %>
+    </div>
+    <div><%= posts.content %></div>
+  </div>
+  <div>
+    <button class="listBtn">목록가기</button>
+    <button class="likeBtn">좋아요</button>
+    <!--작성자만 수정,삭제가 가능하게 -->
+    <% if(user && user.userid === posts.userid) { %>
+    <button class="editBtn">수정하기</button>
+    <button class="delBtn">삭제하기</button>
+    <% } %>
+  </div>
+  <div class="comments">
+    <h3>COMMENT</h3>
+    <% if(user){ %>
+    <form id="commentForm">
+      <textarea
+        name="commentText"
+        id="commentText"
+        placeholder="your opinion!"
+        rows="3"
+      ></textarea>
+      <button class="commentBtn">COMMENT</button>
+    </form>
+    <% } else { %>
+    <p>if you leave a comment you should<a href="/login"> login</a></p>
+    <% } %>
+    <ul class="commentList">
+      <% if(comments && comments.length > 0) { %>
+        <% comments.map(data => {%>
+          <li class="comment">
+            <p><%= data.comment %></p>
+            <p><a href="/personal/<%= data.userid %>"><%= data.username %></a></p>
+            <p>
+              <%
+              const serverDate = new Date(data.createAtDate);
+              const dateStr = serverDate.toISOString().slice(0,10);
+              %> 
+              <%= dateStr %>
+            </p>
+          </li>
+          <% }) %> 
+          <% } else {%> 
+      <li>no comments</li>
+      <% } %>
+    </ul>
+  </div>
+</main>
+
+<script>
+  const listBtn = document.querySelector(".listBtn");
+  listBtn.addEventListener("click", () => {
+    location.href = "/";
+  });
+
+  const editBtn = document.querySelector(".editBtn");
+  if (editBtn) {
+    editBtn.addEventListener("click", () => {
+      location.href = `/edit/<%= posts._id %>`;
+    });
+  }
+
+  const delBtn = document.querySelector(".delBtn");
+  if (delBtn) {
+    delBtn.addEventListener("click", () => {
+      const postId = `<%= posts._id %>`;
+      fetch(`/delete/${postId}`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ _method: "DELETE" }),
+      }).then((res) => {
+        console.log(res);
+        if (res.ok) {
+          //삭제성공시
+          alert("삭제완료");
+          location.href = "/";
+        }
+      });
+    });
+  }
+
+  const likeBtn = document.querySelector(".likeBtn");
+  const user = `<%= user ? user.userid : '' %>`;
+  likeBtn.addEventListener("click", async () => {
+    if (!user) {
+      alert("로그인이 필요합니다.");
+      window.location.href = "/login";
+    } else {
+      fetch("/like/<%= posts._id%>", {
+        method: "POST",
+      }).then((res) => {
+        if (res.ok) {
+          alert("성공");
+          location.reload();
+        }
+      });
+    }
+  });
+
+  const commentForm = document.querySelector("#commentForm");
+  const commentText = document.querySelector("#commentText");
+
+  commentForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const comment = commentText.value.trim();
+
+    if (!comment) {
+      alert("댓글을 작성해주세요");
+      return;
+    }
+
+    fetch("/comment/<%= posts._id %>", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ comment }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          location.reload();
+        } else {
+          alert("comment fail");
+        }
+      });
+  });
+</script>
+<%- include('footer.ejs') %>

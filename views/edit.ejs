@@ -1,0 +1,46 @@
+<%- include('header.ejs') %>
+<main class="mw">
+  <h2>THE BLOG</h2>
+  <h3>edit page</h3>
+  <form
+    action="/edit"
+    method="post"
+    class="writecon"
+    enctype="multipart/form-data"
+  >
+    <input type="hidden" name="_method" value="PUT" />
+    <label for="title">title</label>
+    <input
+      type="text"
+      name="title"
+      id="title"
+      value="<%= posts.title %>"
+      required
+    />
+
+    <input type="text" id="id" name="id" value="<%=posts._id %>" hidden />
+
+    <label for="postimg">img</label>
+    <input type="file" id="postimg" name="postimg" />
+    <input
+      type="text"
+      id="postImgOld"
+      name="postImgOld"
+      value="<%=posts.postImgPath %>"
+      hidden
+    />
+
+    <div><img src="<%= posts.postImgPath %>" alt="<%= posts.title %>" /></div>
+    <label for="content">content</label>
+    <textarea name="content" id="content"><%= posts.content %></textarea>
+    <label for="createAtDate" hidden>date</label>
+    <input type="date" id="createAtDate" name="createAtDate" hidden />
+    <button type="submit">write</button>
+  </form>
+</main>
+<script>
+  let today = new Date().toISOString().slice(0, 10);
+  const createAtDate = document.querySelector("#createAtDate");
+  createAtDate.value = today;
+</script>
+<%- include('footer.ejs') %>

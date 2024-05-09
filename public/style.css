@@ -1,0 +1,410 @@
+@charset 'utf-8';
+
+:root {
+  --color-nv: #273854;
+  --color-wh: #ffffff;
+}
+
+.wrap {
+  overflow: hidden;
+}
+/*header*/
+.mw {
+  max-width: 1216px;
+  width: calc(100% - 4rem);
+  margin: auto;
+}
+
+header a img {
+  width: 50%;
+  height: 50%;
+}
+
+.hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.hd nav {
+  flex: 1; /*중간 nav가 모두 차지하게 바꿈*/
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.hd nav a {
+  padding: 0.5rem 1rem;
+}
+
+.hd .darkmode {
+  border: 2px solid var(--color-nv);
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border-radius: 100px;
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.hd .darkmode:hover {
+  background-color: lightslategray;
+}
+
+.darkmode::before {
+  content: "";
+  width: 25px;
+  height: 20px;
+  background-color: var(--color-nv);
+  border-radius: 200px;
+  position: absolute;
+  transition: 0.3s;
+  transform: translate(25px, 2px);
+}
+
+.darkmode.on::before {
+  transform: translate(-2px, 2px);
+}
+
+.ham {
+  display: none;
+}
+
+.dark {
+  background-color: var(--color-nv);
+  color: var(--color-wh);
+}
+
+.dark .darkmode {
+  background-color: transparent;
+  border-color: var(--color-wh);
+}
+
+.dark .darkmode:hover {
+  background-color: lightslategray;
+}
+
+.dark .darkmode::before {
+  background-color: var(--color-wh);
+}
+
+@media (max-width: 800px) {
+  .hd {
+    position: relative;
+    text-align: center;
+  }
+
+  .ham {
+    display: block;
+    position: absolute;
+    right: 0;
+  }
+
+  .hd.on .ham {
+    right: 50%;
+    transform: translateX(50%);
+    top: 50px;
+  }
+
+  .hd nav,
+  .hd .darkmode {
+    display: none;
+  }
+
+  .hd.on {
+    background-color: lightgray;
+    position: fixed; /*width height 사라지니까 넣어줘야함*/
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 999;
+  }
+  .hd.on nav {
+    flex-grow: 0;
+    flex-direction: column;
+  }
+
+  .hd.on nav,
+  .hd.on .darkmode {
+    display: flex;
+  }
+
+  .dark .hd {
+    background-color: var(--color-nv);
+  }
+
+  main h2::before,
+  main h2::after {
+    width: 150%;
+  }
+}
+
+/*main*/
+main {
+  /* border: 1px solid red; */
+  position: relative;
+}
+
+main h2 {
+  font-weight: bold;
+  font-size: 17vw;
+  text-align: center;
+  position: relative;
+  padding: 1rem 0;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+main h2::before,
+main h2::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  left: 50%;
+  background-color: var(--color-nv);
+  transform: translateX(-50%);
+}
+
+main h2::before {
+  top: 0;
+}
+
+main h2::after {
+  bottom: 0;
+}
+
+main h3 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.dark main h2::before,
+.dark main h2::after {
+  background-color: var(--color-wh);
+}
+
+@media (min-width: 1210px) {
+  main h2 {
+    font-size: 15rem; /*창 크기가 늘어나도 더 커지는걸 방지하게 고정값 줌*/
+    white-space: nowrap;
+  }
+}
+
+/*main ul*/
+.lists {
+  display: grid; /*그리드를 사용하면 브레이크포인트를 안줘도 된다!*/
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  /*rows는 암시적영역 / minmax(350px, 1fr) 350이하로 줄지않는다*/
+  gap: 2rem;
+}
+
+.lists .card {
+  position: relative;
+}
+
+.lists .more {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.img img{
+  width: 400px;
+}
+
+.lists .imgArea {
+  padding-top: 60%;
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.lists .imgArea img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform: 0.3s;
+}
+
+.lists .info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lists .title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.lists .title::before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f106"; /*폰트어썸 상단에 작게 써있음*/
+  position: absolute;
+  right: 0;
+  transform: rotate(90deg);
+}
+
+.lists .desc {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.lists .card:hover img {
+  filter: grayscale(100);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.lists > li:hover .title::before {
+  color: var(--color-nv);
+}
+
+.dark .lists > li:hover .title::before {
+  color: var(--color-wh);
+}
+
+footer {
+  padding: 2rem 0;
+}
+
+/*write.ejs 관련  */
+.writeCon {
+  display: flex;
+  /* flex-direction: column;이거만해도 세로정렬됨 */
+  flex-wrap: wrap; /*넘치면 단을 나눔*/
+  justify-content: center;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+.writeCon label {
+  width: 150px;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+.writeCon input,
+.writeCon textarea {
+  box-sizing: border-box;
+  width: calc(100% - 150px);
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+.writeCon textarea {
+  height: 200px;
+}
+
+#createAtDate {
+  width: 50%;
+}
+
+.writeCon button {
+  /* margin-left: 1rem; */
+  padding: 1rem;
+  border: none;
+  border-radius: 300px;
+  cursor: pointer;
+  color: var(--color-wh);
+  background-color: lightslategray;
+}
+
+.dark .writeCon button {
+  background-color: var(--color-wh);
+  color: var(--color-nv);
+}
+
+.personal ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.personal > li {
+  width: 20%;
+}
+
+.personal img {
+  width: 400px;
+}
+@media (max-width: 800px) {
+  .writeCon {
+    flex-wrap: nowrap;
+    flex-direction: column;
+  }
+
+  .writeCon > label {
+    text-align: center;
+    border-bottom: 1px dotted lightgray;
+  }
+
+  .writeCon > * {
+    width: 100% !important;
+  }
+}
+
+.commentForm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+}
+.comments h3 {
+  padding-top: 1rem;
+}
+.comments textarea {
+  width: 60%;
+}
+
+.commentList .comment {
+  width: 70%;
+  padding: 1rem 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  gap: 1rem;
+  border-bottom: 1px dotted var(--color-nv);
+}
+
+.dark .commentList .comment {
+  border-bottom: 1px dotted var(--color-wh);
+}
+
+.comment p:first-of-type {
+  flex: 1;
+}
+
+.commentBtn {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 300px;
+  cursor: pointer;
+  color: var(--color-wh);
+  background-color: lightslategray;
+}
+
+.commentBtn:hover {
+  opacity: 0.7;
+}
+
+.dark .commentBtn {
+  background-color: var(--color-wh);
+  color: var(--color-nv);
+}
