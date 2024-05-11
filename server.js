@@ -2,7 +2,8 @@ require("dotenv").config();
 
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3000; 
+//process.env.PORT 로 하면 배포후 접속안돼서 걍 여기에 넣음
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
